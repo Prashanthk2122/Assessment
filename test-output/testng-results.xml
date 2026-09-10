@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results ignored="0" total="2" passed="2" failed="0" skipped="0">
+  <reporter-output>
+    <line>
+      <![CDATA[
+========== START: accountCreationForUnknownCustomerIsRejected ==========]]>
+    </line>
+    <line>
+      <![CDATA[[REQUEST] Create account payload: {accountNumber=505286231701, accout_type=CURRENT, account_name=AUTO_UNKNOWN_CUSTOMER, description=Automation test account, balance=100.00, interestRate=1.00}]]>
+    </line>
+    <line>
+      <![CDATA[[API] POST /accounts/add/1978174184 -> HTTP 400 | Body: {"message":"Customer with id: 1978174184 does not exist!"}]]>
+    </line>
+    <line>
+      <![CDATA[[API] GET /accounts/505286231701 -> HTTP 404 | Body: Account Number 505286231701 not found.]]>
+    </line>
+    <line>
+      <![CDATA[========== PASS: accountCreationForUnknownCustomerIsRejected ==========
+]]>
+    </line>
+    <line>
+      <![CDATA[
+========== START: malformedCustomerJsonIsRejectedWithoutPartialCreation ==========]]>
+    </line>
+    <line>
+      <![CDATA[[REQUEST] Malformed customer payload: {"customerNumber":214293,"firstName":"AUTO","lastName":}]]>
+    </line>
+    <line>
+      <![CDATA[[API] POST /customers/add [malformed] -> HTTP 400 | Body: {"type":"about:blank","title":"Bad Request","status":400,"detail":"Failed to read request","instance":"/bank-api/customers/add"}]]>
+    </line>
+    <line>
+      <![CDATA[[API] GET /customers/214293 -> HTTP 200 | Body: <empty>]]>
+    </line>
+    <line>
+      <![CDATA[========== PASS: malformedCustomerJsonIsRejectedWithoutPartialCreation ==========
+]]>
+    </line>
+  </reporter-output>
+  <suite started-at="2026-09-10T16:25:13 IST" name="Default suite" finished-at="2026-09-10T16:25:17 IST" duration-ms="3810">
+    <groups>
+    </groups>
+    <test started-at="2026-09-10T16:25:13 IST" name="Default test" finished-at="2026-09-10T16:25:17 IST" duration-ms="3810">
+      <class name="com.assessment.banking.tests.AdditionalScenariosTest">
+        <test-method is-config="true" signature="setUpApiClient()[pri:0, instance:com.assessment.banking.tests.AdditionalScenariosTest@6221a451]" started-at="2026-09-10T16:25:13 IST" name="setUpApiClient" finished-at="2026-09-10T16:25:14 IST" duration-ms="567" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setUpApiClient -->
+        <test-method signature="accountCreationForUnknownCustomerIsRejected()[pri:0, instance:com.assessment.banking.tests.AdditionalScenariosTest@6221a451]" started-at="2026-09-10T16:25:14 IST" name="accountCreationForUnknownCustomerIsRejected" description="Additional scenario: account creation for an unknown customer must be rejected with a meaningful error." finished-at="2026-09-10T16:25:16 IST" duration-ms="2344" status="PASS">
+          <reporter-output>
+            <line>
+              <![CDATA[
+========== START: accountCreationForUnknownCustomerIsRejected ==========]]>
+            </line>
+            <line>
+              <![CDATA[[REQUEST] Create account payload: {accountNumber=505286231701, accout_type=CURRENT, account_name=AUTO_UNKNOWN_CUSTOMER, description=Automation test account, balance=100.00, interestRate=1.00}]]>
+            </line>
+            <line>
+              <![CDATA[[API] POST /accounts/add/1978174184 -> HTTP 400 | Body: {"message":"Customer with id: 1978174184 does not exist!"}]]>
+            </line>
+            <line>
+              <![CDATA[[API] GET /accounts/505286231701 -> HTTP 404 | Body: Account Number 505286231701 not found.]]>
+            </line>
+            <line>
+              <![CDATA[========== PASS: accountCreationForUnknownCustomerIsRejected ==========
+]]>
+            </line>
+          </reporter-output>
+        </test-method> <!-- accountCreationForUnknownCustomerIsRejected -->
+        <test-method is-config="true" signature="cleanUpSyntheticCustomers()[pri:0, instance:com.assessment.banking.tests.AdditionalScenariosTest@6221a451]" started-at="2026-09-10T16:25:16 IST" name="cleanUpSyntheticCustomers" finished-at="2026-09-10T16:25:16 IST" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- cleanUpSyntheticCustomers -->
+        <test-method is-config="true" signature="setUpApiClient()[pri:0, instance:com.assessment.banking.tests.AdditionalScenariosTest@6221a451]" started-at="2026-09-10T16:25:16 IST" name="setUpApiClient" finished-at="2026-09-10T16:25:16 IST" duration-ms="2" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setUpApiClient -->
+        <test-method signature="malformedCustomerJsonIsRejectedWithoutPartialCreation()[pri:0, instance:com.assessment.banking.tests.AdditionalScenariosTest@6221a451]" started-at="2026-09-10T16:25:16 IST" name="malformedCustomerJsonIsRejectedWithoutPartialCreation" description="Additional scenario: malformed customer JSON must be rejected and must not persist a partial customer." finished-at="2026-09-10T16:25:17 IST" duration-ms="843" status="PASS">
+          <reporter-output>
+            <line>
+              <![CDATA[
+========== START: malformedCustomerJsonIsRejectedWithoutPartialCreation ==========]]>
+            </line>
+            <line>
+              <![CDATA[[REQUEST] Malformed customer payload: {"customerNumber":214293,"firstName":"AUTO","lastName":}]]>
+            </line>
+            <line>
+              <![CDATA[[API] POST /customers/add [malformed] -> HTTP 400 | Body: {"type":"about:blank","title":"Bad Request","status":400,"detail":"Failed to read request","instance":"/bank-api/customers/add"}]]>
+            </line>
+            <line>
+              <![CDATA[[API] GET /customers/214293 -> HTTP 200 | Body: <empty>]]>
+            </line>
+            <line>
+              <![CDATA[========== PASS: malformedCustomerJsonIsRejectedWithoutPartialCreation ==========
+]]>
+            </line>
+          </reporter-output>
+        </test-method> <!-- malformedCustomerJsonIsRejectedWithoutPartialCreation -->
+        <test-method is-config="true" signature="cleanUpSyntheticCustomers()[pri:0, instance:com.assessment.banking.tests.AdditionalScenariosTest@6221a451]" started-at="2026-09-10T16:25:17 IST" name="cleanUpSyntheticCustomers" finished-at="2026-09-10T16:25:17 IST" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- cleanUpSyntheticCustomers -->
+      </class> <!-- com.assessment.banking.tests.AdditionalScenariosTest -->
+    </test> <!-- Default test -->
+  </suite> <!-- Default suite -->
+</testng-results>

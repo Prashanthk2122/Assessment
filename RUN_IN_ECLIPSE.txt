@@ -1,0 +1,62 @@
+BANKING API AUTOMATION ASSESSMENT - FINAL PROJECT
+=================================================
+
+ECLIPSE VERSION:
+Eclipse 2024-06
+
+JAVA:
+JDK 17
+
+IMPORTANT:
+Do NOT run individual files using old TestNG launch configurations.
+
+IMPORT:
+1. Extract this ZIP.
+2. Eclipse -> File -> Import.
+3. Maven -> Existing Maven Projects.
+4. Select BankingApiAutomationAssessment_FINAL.
+5. Finish.
+6. Wait for Maven dependencies to finish.
+7. Right-click project -> Maven -> Update Project.
+8. Project -> Clean.
+
+RUN ALL TESTS:
+Right-click project
+-> Run As
+-> Maven build...
+-> Goals:
+   clean test
+-> Run
+
+RUN ONLY CUSTOMER TEST:
+Right-click project
+-> Run As
+-> Maven build...
+-> Goals:
+   clean test -Dtest=CustomerLifecycleTest
+-> Run
+
+RUN ONLY ADDITIONAL SCENARIOS:
+Goals:
+   clean test -Dtest=AdditionalScenariosTest
+
+RUN FROM WINDOWS COMMAND PROMPT:
+mvn clean test
+
+RESULTS:
+target/surefire-reports
+
+IMPORTANT COMPANY-ASSESSMENT NOTE:
+This project is designed to compile and run cleanly.
+If the external banking API returns a defect such as HTTP 500, a strict
+assignment test may FAIL or a dependent setup scenario may be marked BLOCKED.
+That is expected professional behaviour and must not be hidden.
+
+BEFORE FINAL SUBMISSION:
+Open the assignment Swagger once and confirm:
+- POST /customers/add success status
+- POST /accounts/add/{customerNumber} success status
+- exact transfer JSON field names
+
+If Swagger differs, update only:
+src/test/resources/config.properties
