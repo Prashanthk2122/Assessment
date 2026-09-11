@@ -32,14 +32,14 @@ The validator does not search aliases or nested objects when a field is missing.
 
 Strict DTOs were added for:
 
-- `CustomerResponse`
-- `AccountResponse`
-- `TransferResponse`
-- `TransactionResponse`
-- `BusinessErrorResponse`
-- `ProblemDetailResponse`
+- `CustomerResponseDto`
+- `AccountResponseDto`
+- `TransferResponseDto`
+- `TransactionResponseDto`
+- `BusinessErrorResponseDto`
+- `ProblemDetailResponseDto`
 
-`ResponseDeserializer` uses Jackson with `FAIL_ON_UNKNOWN_PROPERTIES`, `FAIL_ON_TRAILING_TOKENS`, and strict numeric handling. Unexpected contract fields are not silently ignored.
+`StrictResponseMapper` uses Jackson with `FAIL_ON_UNKNOWN_PROPERTIES`, `FAIL_ON_TRAILING_TOKENS`, and strict numeric handling. Unexpected contract fields are not silently ignored.
 
 ### 4. Exact JSON Schema contract validation
 

@@ -206,19 +206,19 @@ The requested duplicate-submission scenario is implemented with `contract.transf
 The previous recursive field-search helper has been removed. The framework now uses three complementary validation layers:
 
 1. **Explicit JSON Path validation** - known fields are read from one exact path, for example `customerNumber`, `city`, `balance`, `[0].transactionId`, and `errorCode`.
-2. **Strict response models** - customer, account, transfer, transaction, business-error, and ProblemDetail responses are deserialized into dedicated Java records by `ResponseDeserializer`. Unknown JSON properties are rejected.
+2. **Strict response DTOs / models** - customer, account, transfer, transaction, business-error, and ProblemDetail responses are deserialized into dedicated Java records by `StrictResponseMapper`. Unknown JSON properties are rejected.
 3. **Exact JSON Schema contract validation** - response schemas use exact field names/types and `additionalProperties: false`; broad aliases and recursive discovery are not used.
 
 ### Main implementation files
 
 - `validation/ExplicitJsonPathValidator.java`
-- `validation/ResponseDeserializer.java`
-- `response/CustomerResponse.java`
-- `response/AccountResponse.java`
-- `response/TransferResponse.java`
-- `response/TransactionResponse.java`
-- `response/BusinessErrorResponse.java`
-- `response/ProblemDetailResponse.java`
+- `validation/StrictResponseMapper.java`
+- `dto/CustomerResponseDto.java`
+- `dto/AccountResponseDto.java`
+- `dto/TransferResponseDto.java`
+- `dto/TransactionResponseDto.java`
+- `dto/BusinessErrorResponseDto.java`
+- `dto/ProblemDetailResponseDto.java`
 
 `JsonSupport.java`, which previously searched recursively through arbitrary JSON objects, has been removed. Transaction parsing and error parsing were also converted from alias-based field scans to exact DTO/JSON-path validation.
 
@@ -228,7 +228,7 @@ Example validation flow:
 HTTP status
     -> exact JSON Schema
     -> exact JSON Path
-    -> strict response-model deserialization
+    -> strict DTO mapping
     -> business / persisted-state assertion
 ```
 
@@ -280,59 +280,3 @@ Negative tests still cover missing mandatory fields without reverting to generic
 - Java types protect numeric/monetary fields at compile time
 - the API client exposes endpoint-specific request types
 - negative-field tests remain explicit and maintainable
-
-
----
-
-## Requirement 8 - Strongly Typed Response Models + Deserialization
-
-The response side of the framework now uses explicit, strongly typed models rather than validating raw JSON alone.
-
-### Response models
-
-- `response/CustomerResponse.java`
-- `response/AccountResponse.java`
-- `response/TransferResponse.java`
-- `response/TransactionResponse.java`
-- `response/BusinessErrorResponse.java`
-- `response/ProblemDetailResponse.java`
-
-The four company-requested primary models are `CustomerResponse`, `AccountResponse`, `TransferResponse`, and `TransactionResponse`.
-
-### Strict deserialization
-
-`validation/ResponseDeserializer.java` deserializes API response bodies with Jackson configured to reject contract drift:
-
-- `FAIL_ON_UNKNOWN_PROPERTIES`
-- `FAIL_ON_NULL_FOR_PRIMITIVES`
-- `FAIL_ON_TRAILING_TOKENS`
-- `ACCEPT_FLOAT_AS_INT` disabled
-
-A response containing an unexpected property or incompatible type therefore fails during deserialization instead of silently being accepted.
-
-### Validation flow
-
-```text
-HTTP status
-    -> JSON Schema contract
-    -> explicit JSON Path checks
-    -> ResponseDeserializer
-    -> strongly typed Response model
-    -> business / persisted-state assertions
-```
-
-Example:
-
-```java
-CustomerResponse customer =
-        ExplicitJsonPathValidator.customer(
-                response,
-                "Customer GET response");
-
-Assert.assertEquals(customer.city(), "Chennai");
-Assert.assertEquals(customer.status(), "ACTIVE");
-```
-
-Account, transfer and transaction-history validations follow the same model-based approach. Transaction history is deserialized into `List<TransactionResponse>` so every item is checked against the exact response model before business assertions are performed.
-
-This improves readability, type safety, maintainability and ensures response validation is based on the documented contract rather than loose JSON-field matching.
