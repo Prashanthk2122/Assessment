@@ -44,10 +44,11 @@ real API defect, such as HTTP 500 for a valid setup request, the test must not
 silently convert that into a pass. The assignment specifically expects
 discrepancies and blockers to be reported.
 
-Before final submission, compare contract-sensitive statuses and business rules in
-`src/test/resources/config.properties` with the live Swagger/OpenAPI. Request field names
-are no longer runtime-configured: the exact wire contract is declared in the strongly
-typed request models using `@JsonProperty`.
+Before final submission, compare the three contract-sensitive values in
+`src/test/resources/config.properties` with the live Swagger:
+- customer-create success status
+- account-create success status
+- transfer request field names
 
 
 ## API Contract Validation
@@ -233,50 +234,3 @@ HTTP status
 ```
 
 This prevents false positives such as accepting `customer.city` when the contract requires root `city`, accepting `accountName` when the contract requires `account_name`, or matching an unrelated nested `status` field.
-
-
----
-
-## Requirement 7 - Strongly Typed Request DTO Models
-
-Generic `Map<String, Object>` request construction has been removed from the Java test framework. Request payloads are now represented by immutable Java 17 records:
-
-- `request/CustomerRequest.java`
-- `request/AccountRequest.java`
-- `request/TransferRequest.java`
-
-Each request model declares the exact wire-level JSON contract using Jackson `@JsonProperty`. For example, `AccountRequest.accountType` intentionally serializes to the documented API field `accout_type`, while `accountName` serializes to `account_name`.
-
-### Type-safe API client
-
-`BankApiClient` now accepts only the correct request model for each operation:
-
-```java
-createCustomer(CustomerRequest request)
-updateCustomer(long customerNumber, CustomerRequest request)
-createAccount(long customerNumber, AccountRequest request)
-transfer(long customerNumber, TransferRequest request)
-```
-
-This prevents accidental submission of an account payload to a customer endpoint and removes runtime-only failures caused by misspelled map keys or wrong Java value types.
-
-### Type-safe test data
-
-`TestDataFactory` now returns request models rather than generic maps:
-
-```java
-CustomerRequest customer = TestDataFactory.customerRequest(customerNumber, "Chennai");
-AccountRequest account = TestDataFactory.accountRequest(accountNumber, balance, "AUTO_SOURCE");
-TransferRequest transfer = TestDataFactory.transferRequest(source, destination, amount);
-```
-
-Negative tests still cover missing mandatory fields without reverting to generic maps. The immutable request records provide explicit `without(...)` or `withoutSourceAccount()` / `withoutDestinationAccount()` / `withoutTransferAmount()` helpers. `@JsonInclude(NON_NULL)` causes the selected field to be omitted from the serialized JSON request.
-
-### Result
-
-- no `Map<String, Object>` request payloads remain under `src/test/java`
-- exact JSON property names are version-controlled in request DTO annotations
-- request construction is readable and refactor-friendly
-- Java types protect numeric/monetary fields at compile time
-- the API client exposes endpoint-specific request types
-- negative-field tests remain explicit and maintainable
