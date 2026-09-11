@@ -336,7 +336,3 @@ Assert.assertEquals(customer.status(), "ACTIVE");
 Account, transfer and transaction-history validations follow the same model-based approach. Transaction history is deserialized into `List<TransactionResponse>` so every item is checked against the exact response model before business assertions are performed.
 
 This improves readability, type safety, maintainability and ensures response validation is based on the documented contract rather than loose JSON-field matching.
-
-## Requirement 9 - Cleanup validation enhancement
-
-Synthetic customer cleanup is now asserted, not merely logged. `BaseApiTest` delegates cleanup to `CleanupSupport`, validates the exact configured delete status, attempts all tracked resources, aggregates failures, and raises a TestNG after-method failure when cleanup is incomplete. If the test already has a primary failure/skip, cleanup diagnostics are attached as suppressed evidence so the original failure is preserved while cleanup failure is still visible.
