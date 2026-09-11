@@ -450,19 +450,3 @@ ApiAssertions.status(
 ```
 
 `ExpectedStatus` also validates configured values are valid HTTP status codes (`100-599`). JVM `-D` overrides remain supported through `TestConfig`.
-
-## Requirement 13 - Additional Transaction Assertions
-
-Transaction validation now includes uniqueness, timestamp ordering, timestamp validity, monetary precision, currency and status checks. The successful-transfer and entire-balance-transfer scenarios validate complete transaction-history quality and then validate the exact correlated debit/credit pair.
-
-Key rules:
-
-- every transaction ID in a history must be unique;
-- history order must match `contract.transaction.order`;
-- timestamps must be parseable ISO-8601 or positive epoch values;
-- transaction amounts must not exceed the configured decimal precision;
-- transaction currency is required, must be a 3-letter uppercase code, and debit/credit currency must match;
-- successful debit/credit entries must match `contract.transaction.successStatus`;
-- optional exact currency checking is enabled by setting `contract.transaction.expectedCurrency` when the OpenAPI contract defines a concrete currency.
-
-See `REQUIREMENT_13_ADDITIONAL_TRANSACTION_ASSERTIONS.md` for implementation details and assumptions.
