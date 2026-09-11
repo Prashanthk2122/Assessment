@@ -424,29 +424,3 @@ mvn clean test
 ```
 
 Then open `target/extent-report.html` in a browser.
-
----
-
-## Requirement 12 - Standardized HTTP Status Configuration
-
-HTTP status handling is now centralized through `ExpectedStatus`.
-
-All expected status codes are read from `src/test/resources/config.properties`; test classes and helpers no longer hardcode HTTP status numbers. This includes transaction-history GET validation, which previously used literal `200` values.
-
-New centralized properties:
-
-```properties
-status.transaction.get=200
-status.serverError.minimum=500
-```
-
-Usage example:
-
-```java
-ApiAssertions.status(
-        response,
-        ExpectedStatus.transactionGet(),
-        "Read transaction history");
-```
-
-`ExpectedStatus` also validates configured values are valid HTTP status codes (`100-599`). JVM `-D` overrides remain supported through `TestConfig`.
