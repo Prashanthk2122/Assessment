@@ -18,7 +18,6 @@
         <testng.version>7.10.2</testng.version>
         <jackson.version>2.17.2</jackson.version>
         <slf4j.version>1.7.36</slf4j.version>
-        <extentreports.version>5.1.2</extentreports.version>
 
         <maven.compiler.plugin.version>3.13.0</maven.compiler.plugin.version>
         <maven.surefire.plugin.version>3.2.5</maven.surefire.plugin.version>
@@ -60,14 +59,6 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
             <version>${slf4j.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <!-- Professional HTML reporting with request/response/validation evidence. -->
-        <dependency>
-            <groupId>com.aventstack</groupId>
-            <artifactId>extentreports</artifactId>
-            <version>${extentreports.version}</version>
             <scope>test</scope>
         </dependency>
 
