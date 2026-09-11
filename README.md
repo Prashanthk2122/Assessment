@@ -51,35 +51,77 @@ Before final submission, compare the three contract-sensitive values in
 - transfer request field names
 
 
-## Requirement 2 - API Contract Validation
+## API Contract Validation
 
-The framework validates API response contracts using Rest-Assured JSON Schema Validator.
+JSON Schema validation is implemented for the response contracts requested in the assessment:
 
-### What was added
+- `schemas/customer-response-schema.json`
+- `schemas/account-response-schema.json`
+- `schemas/transfer-response-schema.json`
+- `schemas/transaction-response-schema.json`
+- `schemas/error-response-schema.json`
 
-- `io.rest-assured:json-schema-validator` test dependency.
-- Central `ApiContractValidator` helper.
-- Version-controlled schemas under `src/test/resources/schemas/`:
-  - `customer-response-schema.json`
-  - `account-response-schema.json`
-  - `transfer-response-schema.json`
-  - `transaction-response-schema.json`
-  - `error-response-schema.json`
-- Contract validation integrated into the existing customer, account, transfer, transaction-history and JSON-error flows.
-- JSON Content-Type is checked before schema matching so a non-JSON contract change is reported clearly.
+`ApiContractValidator` centralizes Rest-Assured schema checks and adds the operation name, schema path, and actual response body to contract failures. Contract checks are executed alongside business assertions so status, schema, and persisted-state failures remain distinguishable.
 
-### Validation order
+The schemas are strict on the core fields/types used by the assessment and allow additional server fields so non-breaking additions do not create noise. If the live OpenAPI document defines a closed object model, set `additionalProperties` to `false` and align the exact documented field list before final submission.
 
-1. Precise HTTP status assertion.
-2. Content-Type / JSON Schema contract assertion.
-3. Business and persisted-state assertion.
+---
 
-This means a correct status code is not enough: missing required properties, changed field types, incompatible response structure or a non-JSON response will fail the same test with the schema path and actual response body in the diagnostic.
+## Structured Error Response Validation Enhancement
 
-### Contract source and maintenance
+The framework now performs field-level error validation in addition to the JSON Schema validation introduced for API contracts.
 
-The supplied Swagger/OpenAPI document is the source of truth. The schemas in this project reflect the contract currently known from the assignment/project mappings. Before final company submission, compare the five JSON files with the live OpenAPI response models. If the API contract is intentionally changed, update the schema and the corresponding test expectation together; do not loosen the schema merely to make a failing API pass.
+### What is validated for business errors
 
-### Current environment note
+`ApiErrorAssertions.businessError(...)` verifies:
 
-`POST /customers/add` has been observed returning HTTP 500 for unique synthetic setup requests. As a result, customer/account/transfer/transaction success-contract validation may be blocked until setup succeeds. Independent JSON error-contract scenarios still execute where their endpoints are reachable.
+1. **Complete JSON error structure** using `business-error-response-schema.json`.
+2. **Error Code** using an exact expected code when documented (for example `CUSTOMER_NOT_FOUND` or `INSUFFICIENT_FUNDS`).
+3. **Error Message** using scenario-specific semantic text.
+4. **Error Category / Type** by requiring a non-empty category and/or type field.
+5. The raw body is included in failures for diagnostics.
+
+Supported field aliases allow the framework to work with common API naming conventions while still requiring the information to exist:
+
+- Code: `errorCode` or `code`
+- Message: `errorMessage`, `message`, or `detail`
+- Category: `errorCategory` or `category`
+- Type: `errorType` or `type`
+
+### Error-code constants
+
+`ErrorCodes.java` includes the assessment examples:
+
+- `CUSTOMER_NOT_FOUND`
+- `INVALID_ACCOUNT`
+- `INSUFFICIENT_FUNDS`
+
+An undocumented code is **not invented** merely to make a test green. For the non-positive transfer scenario, the framework validates that a structured non-empty code is returned and validates the message/category/type, because the assessment acceptance rules do not specify the exact code for that case.
+
+### Parser / malformed JSON errors
+
+Malformed JSON is a protocol/parser error rather than a business-domain error. The deployed service currently returns a Spring/RFC-7807 `ProblemDetail` shape. The framework validates the complete required structure separately using `problem-detail-error-schema.json`:
+
+- `type`
+- `title`
+- `status`
+- `detail`
+- `instance`
+
+This avoids fabricating a business code for an error type where the API does not document one.
+
+### Current environment gap
+
+The deployed unknown-customer response observed during assessment execution is currently similar to:
+
+```json
+{"message":"Customer with id: ... does not exist!"}
+```
+
+It does not expose the requested structured **error code** or **category/type**. With the enhanced assertions this is intentionally reported as an error-contract failure instead of being accepted merely because a message is present. This directly demonstrates the gap identified in the review feedback.
+
+Run the final suite with:
+
+```bash
+mvn clean test
+```
