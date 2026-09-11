@@ -1,0 +1,12 @@
+Requirement 12 validation performed before packaging:
+
+1. Added ExpectedStatus.java as the single typed access point for HTTP status configuration.
+2. Added status.transaction.get=200 to config.properties.
+3. Added status.serverError.minimum=500 to config.properties.
+4. Replaced all TestConfig.getInt("status....") calls in tests/helpers with ExpectedStatus methods.
+5. Replaced all hardcoded transaction-history HTTP 200 assertions with ExpectedStatus.transactionGet().
+6. Replaced the Java >= 500 setup blocker threshold with ExpectedStatus.serverErrorMinimum().
+7. Repository scan found no direct TestConfig.getInt("status....") usage outside ExpectedStatus.
+8. Remaining numeric 500 values in test source are monetary test data (500.00 / 500.01), not HTTP status expectations.
+9. TestConfig.java + ExpectedStatus.java compile successfully with Java 17 javac.
+10. Full Maven execution must be performed in the candidate Eclipse/Maven environment against the live API.

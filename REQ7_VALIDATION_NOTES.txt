@@ -1,0 +1,12 @@
+Requirement 7 static verification
+
+PASS - CustomerRequest.java added
+PASS - AccountRequest.java added
+PASS - TransferRequest.java added
+PASS - BankApiClient methods accept strongly typed request models
+PASS - TestDataFactory returns strongly typed request models
+PASS - no Map<String, Object> request payloads under src/test/java
+PASS - no LinkedHashMap request construction under src/test/java
+PASS - request DTOs + TestDataFactory compiled with javac --release 17 using annotation stubs
+
+Final environment execution required: mvn clean test

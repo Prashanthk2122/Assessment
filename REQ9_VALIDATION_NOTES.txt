@@ -1,0 +1,19 @@
+Requirement 9 validation notes
+==============================
+
+Implemented:
+- Cleanup DELETE response status is asserted against status.customer.delete.
+- Cleanup failure is no longer downgraded to a warning.
+- Every tracked synthetic customer is attempted even when another cleanup fails.
+- Multiple cleanup failures are aggregated into one after-method failure.
+- Cleanup failure diagnostics include resource identifier, exception type and full assertion detail.
+- If a test already failed/skipped, cleanup diagnostics are attached as a suppressed exception before cleanup failure is surfaced.
+
+Static verification performed:
+- BaseApiTest.java, CleanupSupport.java and CleanupValidationException.java compile successfully with Java 17 syntax using minimal dependency stubs.
+- No old [CLEANUP WARNING] swallow-only logic remains in BaseApiTest.
+
+Final environment execution required:
+  mvn clean test
+
+The live banking service may still block setup-dependent tests if POST /customers/add returns HTTP 500. Cleanup assertions should not be weakened to hide service-side failures.

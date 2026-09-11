@@ -1,0 +1,23 @@
+Requirement 8 validation notes
+==============================
+
+Implemented:
+- CustomerResponse
+- AccountResponse
+- TransferResponse
+- TransactionResponse
+- BusinessErrorResponse
+- ProblemDetailResponse
+- strict ResponseDeserializer
+- response validation continues to combine JSON Schema + explicit JSON Path + typed deserialization
+
+Static checks performed in the preparation environment:
+- no stale ResponseDto / com.assessment.banking.dto references remain in Java source
+- internal com.assessment.banking imports resolve to source files
+- 35 Java source files present
+- modified response + validation source files compile successfully against lightweight API stubs with Java 17 syntax/type checking
+
+Final company execution must still be run in the candidate Maven/Eclipse environment:
+    mvn clean test
+
+The shared API has previously returned HTTP 500 from POST /customers/add, so setup-dependent tests may be blocked or fail until the service is available.

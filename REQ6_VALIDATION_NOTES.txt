@@ -1,0 +1,18 @@
+Requirement 6 implementation checks
+===================================
+
+Implemented:
+- Recursive JsonSupport helper removed.
+- Exact JSON Path validation added.
+- Strict response DTOs/models added.
+- Strict Jackson mapper rejects unknown response fields.
+- Response JSON Schemas tightened with additionalProperties=false.
+- Transaction parsing changed from aliases/tree search to exact DTO fields.
+- Error parsing changed from aliases to exact errorCode/errorMessage/errorCategory/errorType paths.
+
+Local package QA performed in preparation environment:
+- All 7 JSON Schema files parse as valid JSON.
+- 32 Java source files compile successfully against API-compatible compile stubs,
+  confirming Java syntax and internal project type/method integration.
+- Full Maven execution was not possible in the preparation environment because
+  Maven/dependency runtime is unavailable there. Run `mvn clean test` in Eclipse/local Maven.

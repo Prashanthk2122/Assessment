@@ -1,0 +1,32 @@
+Requirement 13 validation performed in the preparation environment
+=================================================================
+
+1. Core Java compile check: PASS
+   - TransactionResponse
+   - TransactionRecord
+   - TransactionContract
+   - TransactionAssertions
+   - TransactionSupport
+
+2. ExplicitJsonPathValidator compile check: PASS
+   - exact transaction JSON paths including currency
+   - response-model field comparisons
+
+3. Assertion smoke check: PASS
+   - unique transaction IDs
+   - DESC timestamp ordering
+   - timestamp parsing
+   - amount precision (2 decimals)
+   - currency format/equality
+   - successful transaction status
+
+4. JSON schema parse check: PASS
+   - transaction-response-schema.json
+
+5. Maven CLI is not installed in this preparation runtime.
+   Final company execution must be run in the candidate Eclipse/Maven environment:
+       mvn clean test
+
+6. Live-environment caveat
+   POST /customers/add has previously returned HTTP 500 for unique synthetic setup data.
+   Transfer-dependent tests may remain blocked until that shared-service issue is resolved.
