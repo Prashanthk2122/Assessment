@@ -32,7 +32,8 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- JSON Schema validation for API contract checks. -->
+
+        <!-- Requirement 2: API contract validation with JSON Schema. -->
         <dependency>
             <groupId>io.rest-assured</groupId>
             <artifactId>json-schema-validator</artifactId>
